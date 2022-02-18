@@ -1,4 +1,4 @@
-/* Q1. How many rows are in the data_analyst_jobs table?
+/* Q1. How many rows are in the data_analyst_jobs table? */
 
 SELECT COUNT (*)
 FROM data_analyst_jobs;
@@ -107,21 +107,21 @@ WHERE title LIKE '%Analyst%';
 
 A11: 1636 different job titles containing 'Analyst'
 
-Q12: How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common? */
+Q12: How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
 SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
-WHERE title NOT LIKE '%Analyst%'
-AND title NOT LIKE '%Analytics%';
+WHERE title NOT ILIKE '%Analyst%'
+AND title NOT ILIKE '%Analytics%';
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
-WHERE title NOT LIKE '%Analyst%'
-AND title NOT LIKE '%Analytics%';
+WHERE title NOT ILIKE '%Analyst%'
+AND title NOT ILIKE '%Analytics%';
 
-A12: 26, have 'Data' in common
+A12: 4, have Tableau in common
 
-BONUS: You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks. 
+BONUS: You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks.
 
 SELECT COUNT (title), domain
 FROM data_analyst_jobs
@@ -159,13 +159,4 @@ GROUP BY domain
 ORDER BY count(title) DESC
 LIMIT 4;
 
-SELECT COUNT (title), domain
-FROM data_analyst_jobs
-WHERE skill LIKE '%SQL%'
-AND days_since_posting > 21
-AND domain IS NOT NULL
-GROUP BY domain
-ORDER BY count(title) DESC
-LIMIT 4;
-
-A: Internet and Software, Banks and Financial Services, Consulting and Business Services, Health Care
+A: Internet and Software (62), Banks and Financial Services (61), Consulting and Business Services (57), Heath Care (52)
