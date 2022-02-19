@@ -11,7 +11,7 @@ SELECT *
 FROM data_analyst_jobs
 LIMIT 10;
 
--- A2: ExxonMobil 
+-- A2: ExxonMobil
 
 -- Q3: How many postings are in Tennessee? How many are there in either Tennessee or Kentucky?
 
@@ -30,7 +30,7 @@ WHERE (location = 'TN' OR location = 'KY');
 SELECT COUNT (*)
 FROM data_analyst_jobs
 WHERE location = 'TN' 
-AND star_rating > 4;
+	AND star_rating > 4;
 
 -- A4: 3 postings
 
@@ -39,7 +39,7 @@ AND star_rating > 4;
 SELECT COUNT (*)
 FROM data_analyst_jobs
 WHERE review_count
-BETWEEN 500 AND 1000;
+	BETWEEN 500 AND 1000;
 
 -- A5: 151
 
@@ -66,23 +66,27 @@ SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
 WHERE location = 'CA';
 
--- A8: 230 unique job titles in CA
+-- A8: 230 unique job titles in California
 
 -- Q9: Find the name of each company and its average star rating for all companies that have more than 5000 reviews across all locations. How many companies are there with more that 5000 reviews across all locations?
 
-SELECT company, AVG(star_rating)
+SELECT company, AVG(star_rating) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count > 5000
+	AND company IS NOT NULL
 GROUP BY company;
 
-SELECT COUNT (company)
+SELECT COUNT (company) 		 	
+	FROM (SELECT company, AVG(star_rating)	
 FROM data_analyst_jobs
-WHERE review_count > 5000
+	  WHERE review_count > 5000
+GROUP BY company) AS sub;
 
--- A9: 184 companies with more than 5000 reviews
+-- A9: 40 companies with more than 5000 reviews
 
 -- Q10: Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
 
+-- With NULL
 SELECT company, AVG(star_rating) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count > 5000
@@ -93,7 +97,7 @@ ORDER BY avg_star_rating DESC;
 SELECT company, AVG(star_rating) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count > 5000
-AND company IS NOT NULL
+	AND company IS NOT NULL
 GROUP BY company
 ORDER BY avg_star_rating DESC;
 
@@ -101,42 +105,44 @@ ORDER BY avg_star_rating DESC;
 
 -- Q11: Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
 
-SELECT title
+SELECT DISTINCT title
 FROM data_analyst_jobs
-WHERE title LIKE '%Analyst%';
+WHERE title ILIKE '%Analyst%';
 
+-- Including duplicates
 SELECT COUNT (title)
 FROM data_analyst_jobs
-WHERE title LIKE '%Analyst%';
+WHERE title ILIKE '%Analyst%';
 
+-- Not including duplicates
 SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
-WHERE title LIKE '%Analyst%';
+WHERE title ILIKE '%Analyst%';
 
--- A11: 1636 different job titles (754 distinct titles) containing 'Analyst'
+-- A11: 1669 different job titles (774 distinct titles) containing 'Analyst'
 
 -- Q12: How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
 SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
 WHERE title NOT ILIKE '%Analyst%'
-AND title NOT ILIKE '%Analytics%';
+	AND title NOT ILIKE '%Analytics%';
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
 WHERE title NOT ILIKE '%Analyst%'
-AND title NOT ILIKE '%Analytics%';
+	AND title NOT ILIKE '%Analytics%';
 
--- Scott's answer:
+-- Scott's answer (can replace UPPER with LOWER + lower case string):
 SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
 WHERE UPPER (title) NOT LIKE '%ANALYST%'
-AND UPPER (title) NOT LIKE '%ANALYTICS%';
+	AND UPPER (title) NOT LIKE '%ANALYTICS%';
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
 WHERE UPPER (title) NOT LIKE '%ANALYST%'
-AND UPPER (title) NOT LIKE '%ANALYTICS%';
+	AND UPPER (title) NOT LIKE '%ANALYTICS%';
 
 -- A12: 4, have Tableau in common
 
@@ -145,7 +151,7 @@ AND UPPER (title) NOT LIKE '%ANALYTICS%';
 SELECT COUNT (title), domain
 FROM data_analyst_jobs
 WHERE skill LIKE '%SQL%'
-AND days_since_posting > 21
+	AND days_since_posting > 21
 GROUP BY domain;
 
 -- Disregard any postings where the domain is NULL.
@@ -153,8 +159,8 @@ GROUP BY domain;
 SELECT COUNT (title), domain
 FROM data_analyst_jobs
 WHERE skill LIKE '%SQL%'
-AND days_since_posting > 21
-AND domain IS NOT NULL
+	AND days_since_posting > 21
+	AND domain IS NOT NULL
 GROUP BY domain;
 
 -- Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
@@ -162,8 +168,8 @@ GROUP BY domain;
 SELECT COUNT (title), domain
 FROM data_analyst_jobs
 WHERE skill LIKE '%SQL%'
-AND days_since_posting > 21
-AND domain IS NOT NULL
+	AND days_since_posting > 21
+	AND domain IS NOT NULL
 GROUP BY domain
 ORDER BY count(title) DESC;
 
@@ -172,8 +178,8 @@ ORDER BY count(title) DESC;
 SELECT COUNT (title), domain
 FROM data_analyst_jobs
 WHERE skill LIKE '%SQL%'
-AND days_since_posting > 21
-AND domain IS NOT NULL
+	AND days_since_posting > 21
+	AND domain IS NOT NULL
 GROUP BY domain
 ORDER BY count (title) DESC
 LIMIT 4;
