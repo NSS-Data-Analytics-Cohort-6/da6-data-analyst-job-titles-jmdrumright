@@ -75,11 +75,6 @@ FROM data_analyst_jobs
 WHERE review_count > 5000
 GROUP BY company;
 
-SELECT company, AVG(star_rating)
-FROM data_analyst_jobs
-WHERE review_count > 5000
-GROUP BY company;
-
 SELECT COUNT (company)
 FROM data_analyst_jobs
 WHERE review_count > 5000
@@ -94,7 +89,15 @@ WHERE review_count > 5000
 GROUP BY company
 ORDER BY avg_star_rating DESC;
 
--- A10: General Motors with an average star rating of ~4.2
+-- Without NULL
+SELECT company, AVG(star_rating) AS avg_star_rating
+FROM data_analyst_jobs
+WHERE review_count > 5000
+AND company IS NOT NULL
+GROUP BY company
+ORDER BY avg_star_rating DESC;
+
+-- A10: General Motors (Unilever without NULL) with an average star rating of ~4.2
 
 -- Q11: Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
 
@@ -106,7 +109,11 @@ SELECT COUNT (title)
 FROM data_analyst_jobs
 WHERE title LIKE '%Analyst%';
 
--- A11: 1636 different job titles containing 'Analyst'
+SELECT COUNT (DISTINCT title)
+FROM data_analyst_jobs
+WHERE title LIKE '%Analyst%';
+
+-- A11: 1636 different job titles (754 distinct titles) containing 'Analyst'
 
 -- Q12: How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
@@ -123,11 +130,13 @@ AND title NOT ILIKE '%Analytics%';
 -- Scott's answer:
 SELECT COUNT (DISTINCT title)
 FROM data_analyst_jobs
-WHERE UPPER (title) NOT LIKE '%ANALY%';
+WHERE UPPER (title) NOT LIKE '%ANALYST%'
+AND UPPER (title) NOT LIKE '%ANALYTICS%';
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
-WHERE UPPER (title) NOT LIKE '%ANALY%';
+WHERE UPPER (title) NOT LIKE '%ANALYST%'
+AND UPPER (title) NOT LIKE '%ANALYTICS%';
 
 -- A12: 4, have Tableau in common
 
